@@ -70,15 +70,15 @@ isar_version: &isar_version 3.1.7 # define the version to be used
 dependencies:
   isar: 
     version: *isar_version
-    hosted: https://pub.isar-community.dev/
+    hosted: https://isar-community.dev/
   isar_flutter_libs: # contains Isar Core
     version: *isar_version
-    hosted: https://pub.isar-community.dev/
+    hosted: https://isar-community.dev/
 
 dev_dependencies:
   isar_generator: 
     version: *isar_version
-    hosted: https://pub.isar-community.dev/
+    hosted: https://isar-community.dev/
   build_runner: any
 
 ```
