@@ -68,7 +68,7 @@ Holy smokes you're here! Let's get started on using the coolest Flutter database
 isar_version: &isar_version 3.1.7 # define the version to be used
 
 dependencies:
-  isar: 
+  isar:
     version: *isar_version
     hosted: https://pub.isar-community.dev/
   isar_flutter_libs: # contains Isar Core
@@ -76,11 +76,10 @@ dependencies:
     hosted: https://pub.isar-community.dev/
 
 dev_dependencies:
-  isar_generator: 
+  isar_generator:
     version: *isar_version
     hosted: https://pub.isar-community.dev/
   build_runner: any
-
 ```
 
 ### 2. Annotate a Collection
@@ -200,7 +199,7 @@ queryStream.listen((newResult) {
 Benchmarks only give a rough idea of the performance of a database but as you can see, Isar NoSQL database is quite fast 😇
 
 | <img src="https://raw.githubusercontent.com/isar-community/isar/v3/.github/assets/benchmarks/insert.png" width="100%" /> | <img src="https://raw.githubusercontent.com/isar-community/isar/v3/.github/assets/benchmarks/query.png" width="100%" /> |
-| ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
 | <img src="https://raw.githubusercontent.com/isar-community/isar/v3/.github/assets/benchmarks/delete.png" width="100%" /> | <img src="https://raw.githubusercontent.com/isar-community/isar/v3/.github/assets/benchmarks/size.png" width="100%" />  |
 
 If you are interested in more benchmarks or want to check how Isar performs on your device you can run the [benchmarks](https://github.com/isar-community/isar_benchmark) yourself.
@@ -243,6 +242,7 @@ Big thanks go to these wonderful people:
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/inkomomutane"><img src="https://avatars.githubusercontent.com/u/57417802?v=4" width="100px;" alt=""/><br /><sub><b>Nelson  Mutane</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Viper-Bit"><img src="https://avatars.githubusercontent.com/u/24822764?v=4" width="100px;" alt=""/><br /><sub><b>Peyman</b></sub></a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/psengrith"><img src="https://avatars.githubusercontent.com/u/172288069?v=4" width="100px;" alt=""/><br /><sub><b>Sengrith</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/leisim"><img src="https://avatars.githubusercontent.com/u/13610195?v=4" width="100px;" alt=""/><br /><sub><b>Simon Leier</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ika020202"><img src="https://avatars.githubusercontent.com/u/42883378?v=4" width="100px;" alt=""/><br /><sub><b>Ura</b></sub></a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/blendthink"><img src="https://avatars.githubusercontent.com/u/32213113?v=4" width="100px;" alt=""/><br /><sub><b>blendthink</b></sub></a></td>
