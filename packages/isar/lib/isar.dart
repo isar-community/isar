@@ -17,6 +17,11 @@ import 'package:isar/src/native/split_words.dart'
 import 'package:meta/meta.dart';
 import 'package:meta/meta_meta.dart';
 
+export 'dart:convert';
+
+part 'src/xxh3/xxh3.dart';
+part 'src/xxh3/math.dart';
+part 'src/xxh3/util.dart';
 part 'src/annotations/backlink.dart';
 part 'src/annotations/collection.dart';
 part 'src/annotations/embedded.dart';

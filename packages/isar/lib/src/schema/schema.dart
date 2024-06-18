@@ -5,7 +5,7 @@ class Schema<OBJ> {
   /// @nodoc
   @protected
   const Schema({
-    required this.id,
+    required this.idGenerator,
     required this.name,
     required this.properties,
     required this.estimateSize,
@@ -18,7 +18,7 @@ class Schema<OBJ> {
   @protected
   factory Schema.fromJson(Map<String, dynamic> json) {
     return Schema(
-      id: -1,
+      idGenerator: () => -1,
       name: json['name'] as String,
       properties: {
         for (final property in json['properties'] as List<dynamic>)
@@ -33,7 +33,9 @@ class Schema<OBJ> {
   }
 
   /// Internal id of this collection or embedded object.
-  final int id;
+  int get id => idGenerator();
+
+  final int Function() idGenerator;
 
   /// Name of the collection or embedded object
   final String name;
