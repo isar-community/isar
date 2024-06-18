@@ -406,6 +406,14 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
   }
 }
 
+String generateGenerateId(ObjectInfo object) {
+  return '''
+    int ${object.generateIdName}() {
+      return xxh3(utf8.encode(r'${object.isarName}'));
+    }
+  ''';
+}
+
 String generateGetId(ObjectInfo object) {
   final defaultVal = object.idProperty.nullable ? '?? Isar.autoIncrement' : '';
   return '''

@@ -20,7 +20,7 @@ String generateSchema(ObjectInfo object) {
 
   code += '''
     name: r'${object.isarName}',
-    id: ${object.id},
+    idGenerator: ${object.generateIdName},
     properties: {$properties},
 
     estimateSize: ${object.estimateSizeName},
@@ -88,7 +88,7 @@ String _generateIndexSchema(ObjectIndex index) {
 
   return '''
     IndexSchema(
-      id: ${index.id},
+      idGenerator: ${index.id},
       name: r'${index.name}',
       unique: ${index.unique},
       replace: ${index.replace},

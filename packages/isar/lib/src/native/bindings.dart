@@ -2024,8 +2024,8 @@ class IsarCoreBindings {
   }
 
   late final _isar_q_aggregate_long_resultPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int64 Function(ffi.Pointer<CAggregationResult>)>>(
+          ffi
+          .NativeFunction<ffi.Int64 Function(ffi.Pointer<CAggregationResult>)>>(
       'isar_q_aggregate_long_result');
   late final _isar_q_aggregate_long_result = _isar_q_aggregate_long_resultPtr
       .asFunction<int Function(ffi.Pointer<CAggregationResult>)>();
@@ -2088,9 +2088,9 @@ class IsarCoreBindings {
   }
 
   late final _isar_txn_finishPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int64 Function(
-              ffi.Pointer<CIsarTxn>, ffi.Bool)>>('isar_txn_finish');
+          ffi
+          .NativeFunction<ffi.Int64 Function(ffi.Pointer<CIsarTxn>, ffi.Bool)>>(
+      'isar_txn_finish');
   late final _isar_txn_finish = _isar_txn_finishPtr
       .asFunction<int Function(ffi.Pointer<CIsarTxn>, bool)>();
 

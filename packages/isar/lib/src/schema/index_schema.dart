@@ -5,7 +5,7 @@ class IndexSchema {
   /// @nodoc
   @protected
   const IndexSchema({
-    required this.id,
+    required this.idGenerator,
     required this.name,
     required this.unique,
     required this.replace,
@@ -16,7 +16,7 @@ class IndexSchema {
   @protected
   factory IndexSchema.fromJson(Map<String, dynamic> json) {
     return IndexSchema(
-      id: -1,
+      idGenerator: () => -1,
       name: json['name'] as String,
       unique: json['unique'] as bool,
       replace: json['replace'] as bool,
@@ -27,7 +27,9 @@ class IndexSchema {
   }
 
   /// Internal id of this index.
-  final int id;
+  int get id => idGenerator();
+
+  final int Function() idGenerator;
 
   /// Name of this index.
   final String name;

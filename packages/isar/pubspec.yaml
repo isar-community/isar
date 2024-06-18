@@ -18,6 +18,7 @@ dependencies:
 #    path: ../isar_test
   js: any
   meta: ^1.7.0
+  xxh3: ^1.0.1
 
 dev_dependencies:
   ffigen: "^7.0.0"

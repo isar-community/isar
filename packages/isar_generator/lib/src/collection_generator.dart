@@ -61,6 +61,7 @@ class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
 
       ${generateEnumMaps(object)}
 
+      ${generateGenerateId(object)}
       ${generateGetId(object)}
       ${generateGetLinks(object)}
       ${generateAttach(object)}
@@ -91,6 +92,7 @@ class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
 
       ${generateSchema(object)}
 
+      ${generateGenerateId(object)}
       ${generateEstimateSerialize(object)}
       ${generateSerialize(object)}
       ${generateDeserialize(object)}
