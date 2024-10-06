@@ -16,15 +16,18 @@ pub(crate) fn perform_migration(
     env: &Arc<Env>,
     mut schemas: Vec<IsarSchema>,
 ) -> Result<Vec<NativeCollection>> {
+    println!("Perform migration");
     let txn = NativeTxn::new(instance_id, env, true)?;
     let info_db = open_info_db(&txn)?;
     let existing_schemas = get_schemas(&txn, info_db)?;
     txn.commit()?;
 
     let schema_names = schemas.iter().map(|c| c.name.to_string()).collect_vec();
-
+    let existing_names = existing_schemas.iter().map(|c| c.name.to_string()).collect_vec();
+    println!("Existing Schemas: {:?}", existing_names);
     let mut collections = vec![];
     for schema in schemas.iter_mut() {
+        
         let existing_schema_index = existing_schemas.iter().position(|c| c.name == schema.name);
 
         let txn = NativeTxn::new(instance_id, env, true)?;
@@ -111,11 +114,22 @@ fn get_schemas(txn: &NativeTxn, info_db: Db) -> Result<Vec<IsarSchema>> {
     let info_cursor = txn.get_cursor(info_db)?;
     let mut schemas = vec![];
     for (_, bytes) in info_cursor.iter()? {
-        let col =
-            serde_json::from_slice::<IsarSchema>(bytes).map_err(|_| IsarError::SchemaError {
-                message: "Could not deserialize existing schema.".to_string(),
-            })?;
-        schemas.push(col);
+        if let Ok(collection) = serde_json::from_slice::<IsarSchema>(bytes)
+        {
+            println!("v4Col: {:?}", collection);
+            schemas.push(collection);
+        } else {
+            println!("Could not deserialize existing schema. Attempting fallback");
+            if let Ok(collection) = serde_json::from_slice::<crate::core::v3schema::collection_schema::CollectionSchema>(bytes)
+            {
+              println!("Fallback OK. Col: {:?}", collection);
+              //IsarSchema::new("test234", None, Vec::new(), Vec::new(), false)
+              let v4schema = IsarSchema::new(collection.name.as_str(), None, collection.properties, Vec::new(), collection.embedded);
+              schemas.push(v4schema);
+            } else {
+              println!("Fallback failed");
+            }
+        }
     }
     Ok(schemas)
 }
