@@ -58,25 +58,31 @@ fn main() {
 
     let is_android = env::var("CARGO_CFG_TARGET_OS").unwrap() == "android";
 
-    let _ = fs::remove_dir_all("libmdbx");
+    let mut mdbx = PathBuf::from(&env::var("CARGO_MANIFEST_DIR").unwrap());
+    mdbx.push("libmdbx");
 
-    Command::new("git")
-        .arg("clone")
-        .arg(LIBMDBX_REPO)
-        .arg("--branch")
-        .arg(LIBMDBX_TAG)
-        .output()
-        .unwrap();
+    if !mdbx.exists() {
+        Command::new("git")
+            .arg("clone")
+            .arg(LIBMDBX_REPO)
+            .arg("--branch")
+            .arg(LIBMDBX_TAG)
+            .output()
+            .unwrap();
+    }
+
+    mdbx.push("dist-check");
+    let _ = fs::remove_dir_all(mdbx.as_path());
+    mdbx.pop();
+
+    mdbx.push("dist");
+    let _ = fs::remove_dir_all(mdbx.as_path());
 
     Command::new("make")
         .arg("release-assets")
         .current_dir("libmdbx")
         .output()
-        .unwrap();
-
-    let mut mdbx = PathBuf::from(&env::var("CARGO_MANIFEST_DIR").unwrap());
-    mdbx.push("libmdbx");
-    mdbx.push("dist");
+        .expect(mdbx.as_path().to_str().unwrap());
 
     let core_path = mdbx.join("mdbx.c");
     let mut core = fs::read_to_string(core_path.as_path()).unwrap();
@@ -95,6 +101,14 @@ fn main() {
     }
     fs::write(core_path.as_path(), core).unwrap();
 
+    if env::var("TARGET").unwrap().contains("windows") {
+        let h_path = mdbx.join("mdbx.h");
+        let mut headers = fs::read_to_string(h_path.as_path()).expect("dist/mdbx.h was not found!");
+        // A temporary workaround since -DMDBX_LOCK_SUFFIX has no effect.
+        headers = headers.replace("\"-lck\"", "\".lock\"");
+        fs::write(h_path.as_path(), headers).unwrap();
+    }
+
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     let bindings = bindgen::Builder::default()
@@ -111,6 +125,9 @@ fn main() {
         .generate_comments(true)
         .disable_header_comment()
         .rustfmt_bindings(true)
+        .clang_arg("-Wno-ignored-attributes")
+        .clang_arg("-DNDEBUG 1")
+        .clang_arg("-DMDBX_WITHOUT_MSVC_CRT 1")
         .generate()
         .expect("Unable to generate bindings");
 
@@ -121,6 +138,10 @@ fn main() {
     let mut cc_builder = cc::Build::new();
     let flags = format!("{:?}", cc_builder.get_compiler().cflags_env());
     cc_builder.flag_if_supported("-Wno-everything");
+
+    if env::var("TARGET").unwrap().ends_with("-musl") {
+        cc_builder.define("MDBX_HAVE_BUILTIN_CPU_SUPPORTS", "0");
+    }
 
     if cfg!(windows) {
         let dst = cmake::Config::new(&mdbx)
