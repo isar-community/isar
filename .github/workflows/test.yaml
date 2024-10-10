@@ -128,15 +128,12 @@ jobs:
           cargo install cargo-tarpaulin --version 0.24.0 --force
           cargo tarpaulin -o Json -v
       - name: Upload isar_test Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
-          files: packages/isar/lcov_isar_test.info
-          flags: isar
-      - name: Upload isar_core Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          files: lcov.info
-          flags: core
+          override_branch: main
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/isar/lcov_isar.info, ./packages/isar/lcov_isar_test.info
+          verbose: true
 
   test_generator:
     name: Generator Test
