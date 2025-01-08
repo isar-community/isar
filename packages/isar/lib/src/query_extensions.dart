@@ -257,19 +257,8 @@ extension QueryExecute<OBJ, R> on QueryBuilder<OBJ, R, QOperations> {
     int? offset,
     int? limit,
   }) {
-    final q = build();
-    final controller = StreamController<List<R>>();
-    q
-        .watch(fireImmediately: fireImmediately, offset: offset, limit: limit)
-        .listen(
-      controller.add,
-      onError: controller.addError,
-      onDone: () {
-        controller.close();
-        q.close();
-      },
-    );
-    return controller.stream;
+    return watchLazy(fireImmediately: fireImmediately)
+        .map((_) => findAll(limit: limit, offset: offset));
   }
 
   /// {@macro query_watch_lazy}
