@@ -1,3 +1,9 @@
+## 3.1.8
+
+### Fixes
+
+Fix Android release build on Flutter 3.24.0
+
 ## 3.1.7
 
 ### Fixes
