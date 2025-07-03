@@ -1,5 +1,4 @@
 @TestOn('vm')
-
 import 'package:test/test.dart';
 
 void main() {
@@ -51,9 +50,9 @@ void main() {
         for (final input in testInputs) {
           final hash = webSafeHash(input);
           expect(hash, lessThanOrEqualTo(maxSafeInt),
-                 reason: 'Hash for "$input" exceeds safe integer range');
+              reason: 'Hash for "$input" exceeds safe integer range');
           expect(hash, greaterThanOrEqualTo(0),
-                 reason: 'Hash for "$input" is negative');
+              reason: 'Hash for "$input" is negative');
         }
       });
 
@@ -76,7 +75,7 @@ void main() {
 
         // Should have good distribution (low collision rate)
         expect(hashes.length, greaterThan(990),
-               reason: 'Hash function has too many collisions');
+            reason: 'Hash function has too many collisions');
       });
 
       test('hash function handles edge cases correctly', () {
@@ -137,7 +136,8 @@ void main() {
           return hash;
         }
 
-        final stopwatch = Stopwatch()..start();
+        final stopwatch = Stopwatch()
+          ..start();
 
         // Generate hashes for many inputs
         for (var i = 0; i < 10000; i++) {

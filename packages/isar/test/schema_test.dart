@@ -13,11 +13,13 @@ void main() {
       }
 
       // Test consistency
-      expect(webSafeHash('TestCollection'), equals(webSafeHash('TestCollection')));
+      expect(
+          webSafeHash('TestCollection'), equals(webSafeHash('TestCollection')));
       expect(webSafeHash('TestIndex'), equals(webSafeHash('TestIndex')));
 
       // Test different inputs produce different results
-      expect(webSafeHash('Collection1'), isNot(equals(webSafeHash('Collection2'))));
+      expect(webSafeHash('Collection1'),
+          isNot(equals(webSafeHash('Collection2'))));
 
       // Test all results are within JavaScript safe range
       final testInputs = [
@@ -54,7 +56,11 @@ void main() {
       expect(webSafeHash('test', 1), isNot(equals(webSafeHash('test', 0))));
 
       // Test special characters
-      final specialChars = ['!@#\$%^&*()', 'Collection-with-dashes', 'Collection_with_underscores'];
+      final specialChars = [
+        '!@#\$%^&*()',
+        'Collection-with-dashes',
+        'Collection_with_underscores'
+      ];
       for (final input in specialChars) {
         final hash = webSafeHash(input);
         expect(hash, isA<int>());
@@ -81,7 +87,7 @@ void main() {
 
       // Should have good distribution (low collision rate)
       expect(hashes.length, greaterThan(95),
-             reason: 'Hash function has too many collisions');
+          reason: 'Hash function has too many collisions');
     });
   });
 }

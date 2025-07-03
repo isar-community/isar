@@ -23,9 +23,10 @@ class TestCollection {
       );
 
       final generatedCode = result['a|lib/test_collection.g.dart']!;
-      
+
       // Should contain the web-safe hash function
-      expect(generatedCode, contains('int _webSafeHash(String input, [int seed = 0])'));
+      expect(generatedCode,
+          contains('int _webSafeHash(String input, [int seed = 0])'));
       expect(generatedCode, contains('var hash = 5381 + seed;'));
       expect(generatedCode, contains('& 0x7FFFFFFF'));
     });
@@ -48,9 +49,10 @@ class TestCollection {
       );
 
       final generatedCode = result['a|lib/test_collection.g.dart']!;
-      
+
       // Should use idGenerator instead of id
-      expect(generatedCode, contains('idGenerator: () => _webSafeHash(r\'TestCollection\')'));
+      expect(generatedCode,
+          contains('idGenerator: () => _webSafeHash(r\'TestCollection\')'));
       expect(generatedCode, isNot(contains('id: ')));
     });
 
@@ -72,9 +74,10 @@ class TestCollection {
       );
 
       final generatedCode = result['a|lib/test_collection.g.dart']!;
-      
+
       // Should use final instead of const
-      expect(generatedCode, contains('final TestCollectionSchema = CollectionSchema('));
+      expect(generatedCode,
+          contains('final TestCollectionSchema = CollectionSchema('));
       expect(generatedCode, isNot(contains('const TestCollectionSchema')));
     });
 
@@ -101,10 +104,12 @@ class TestCollection {
       );
 
       final generatedCode = result['a|lib/test_collection.g.dart']!;
-      
+
       // Should generate idGenerator for indexes
-      expect(generatedCode, contains('idGenerator: () => _webSafeHash(r\'name\')'));
-      expect(generatedCode, contains('idGenerator: () => _webSafeHash(r\'email\')'));
+      expect(generatedCode,
+          contains('idGenerator: () => _webSafeHash(r\'name\')'));
+      expect(generatedCode,
+          contains('idGenerator: () => _webSafeHash(r\'email\')'));
     });
 
     test('generates idGenerator for links', () async {
@@ -138,7 +143,7 @@ class Post {
 
       final userCode = result['a|lib/user.g.dart']!;
       final postCode = result['a|lib/post.g.dart']!;
-      
+
       // Should generate idGenerator for links
       expect(userCode, contains('idGenerator: () => _webSafeHash(r\'posts\''));
       expect(postCode, contains('idGenerator: () => _webSafeHash(r\'author\''));
@@ -169,10 +174,11 @@ class Person {
       );
 
       final generatedCode = result['a|lib/person.g.dart']!;
-      
+
       // Should generate idGenerator for embedded schema
       expect(generatedCode, contains('final AddressSchema = Schema('));
-      expect(generatedCode, contains('idGenerator: () => _webSafeHash(r\'Address\')'));
+      expect(generatedCode,
+          contains('idGenerator: () => _webSafeHash(r\'Address\')'));
       expect(generatedCode, isNot(contains('const AddressSchema')));
     });
 
@@ -235,34 +241,46 @@ class Comment {
       final articleCode = result['a|lib/article.g.dart']!;
       final userCode = result['a|lib/user.g.dart']!;
       final commentCode = result['a|lib/comment.g.dart']!;
-      
+
       // All should contain the web-safe hash function
-      expect(articleCode, contains('int _webSafeHash(String input, [int seed = 0])'));
-      expect(userCode, contains('int _webSafeHash(String input, [int seed = 0])'));
-      expect(commentCode, contains('int _webSafeHash(String input, [int seed = 0])'));
-      
+      expect(articleCode,
+          contains('int _webSafeHash(String input, [int seed = 0])'));
+      expect(
+          userCode, contains('int _webSafeHash(String input, [int seed = 0])'));
+      expect(commentCode,
+          contains('int _webSafeHash(String input, [int seed = 0])'));
+
       // All should use final instead of const
       expect(articleCode, contains('final ArticleSchema = CollectionSchema('));
       expect(articleCode, contains('final TagSchema = Schema('));
       expect(userCode, contains('final UserSchema = CollectionSchema('));
       expect(commentCode, contains('final CommentSchema = CollectionSchema('));
-      
+
       // Should generate idGenerator for all schemas
-      expect(articleCode, contains('idGenerator: () => _webSafeHash(r\'Article\')'));
-      expect(articleCode, contains('idGenerator: () => _webSafeHash(r\'Tag\')'));
+      expect(articleCode,
+          contains('idGenerator: () => _webSafeHash(r\'Article\')'));
+      expect(
+          articleCode, contains('idGenerator: () => _webSafeHash(r\'Tag\')'));
       expect(userCode, contains('idGenerator: () => _webSafeHash(r\'User\')'));
-      expect(commentCode, contains('idGenerator: () => _webSafeHash(r\'Comment\')'));
-      
+      expect(commentCode,
+          contains('idGenerator: () => _webSafeHash(r\'Comment\')'));
+
       // Should generate idGenerator for indexes
-      expect(articleCode, contains('idGenerator: () => _webSafeHash(r\'title\')'));
-      expect(articleCode, contains('idGenerator: () => _webSafeHash(r\'slug\')'));
-      expect(articleCode, contains('idGenerator: () => _webSafeHash(r\'category_publishedAt\')'));
-      
+      expect(
+          articleCode, contains('idGenerator: () => _webSafeHash(r\'title\')'));
+      expect(
+          articleCode, contains('idGenerator: () => _webSafeHash(r\'slug\')'));
+      expect(articleCode, contains(
+          'idGenerator: () => _webSafeHash(r\'category_publishedAt\')'));
+
       // Should generate idGenerator for links and backlinks
-      expect(articleCode, contains('idGenerator: () => _webSafeHash(r\'author\''));
-      expect(articleCode, contains('idGenerator: () => _webSafeHash(r\'comments\''));
+      expect(
+          articleCode, contains('idGenerator: () => _webSafeHash(r\'author\''));
+      expect(articleCode,
+          contains('idGenerator: () => _webSafeHash(r\'comments\''));
       expect(userCode, contains('idGenerator: () => _webSafeHash(r\'author\''));
-      expect(commentCode, contains('idGenerator: () => _webSafeHash(r\'comments\''));
+      expect(commentCode,
+          contains('idGenerator: () => _webSafeHash(r\'comments\''));
     });
   });
 }

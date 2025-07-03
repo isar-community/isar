@@ -19,7 +19,7 @@ void main() {
       final hash1 = _webSafeHash(input);
       final hash2 = _webSafeHash(input);
       final hash3 = _webSafeHash(input);
-      
+
       expect(hash1, equals(hash2));
       expect(hash2, equals(hash3));
       expect(hash1, equals(hash3));
@@ -30,7 +30,7 @@ void main() {
       final hash2 = _webSafeHash('Collection2');
       final hash3 = _webSafeHash('DifferentName');
       final hash4 = _webSafeHash('');
-      
+
       expect(hash1, isNot(equals(hash2)));
       expect(hash1, isNot(equals(hash3)));
       expect(hash1, isNot(equals(hash4)));
@@ -41,7 +41,7 @@ void main() {
 
     test('stays within JavaScript safe integer range', () {
       const maxSafeInt = 0x7FFFFFFF; // 2^31 - 1
-      
+
       final testInputs = [
         'VeryLongCollectionNameThatMightCauseOverflow',
         'AnotherLongNameWithSpecialCharacters!@#\$%^&*()',
@@ -52,13 +52,13 @@ void main() {
         'Numbers123456789',
         'MixedCASEcollection',
       ];
-      
+
       for (final input in testInputs) {
         final hash = _webSafeHash(input);
-        expect(hash, lessThanOrEqualTo(maxSafeInt), 
-               reason: 'Hash for "$input" exceeds safe integer range');
-        expect(hash, greaterThanOrEqualTo(0), 
-               reason: 'Hash for "$input" is negative');
+        expect(hash, lessThanOrEqualTo(maxSafeInt),
+            reason: 'Hash for "$input" exceeds safe integer range');
+        expect(hash, greaterThanOrEqualTo(0),
+            reason: 'Hash for "$input" is negative');
       }
     });
 
@@ -68,7 +68,7 @@ void main() {
       final hashSeed0 = _webSafeHash(input, 0);
       final hashSeed1 = _webSafeHash(input, 1);
       final hashSeed100 = _webSafeHash(input, 100);
-      
+
       expect(hashNoSeed, equals(hashSeed0));
       expect(hashSeed1, isNot(equals(hashNoSeed)));
       expect(hashSeed100, isNot(equals(hashNoSeed)));
@@ -92,7 +92,7 @@ void main() {
         'Collection\nwith\nnewlines',
         'Collection\twith\ttabs',
       ];
-      
+
       for (final input in specialChars) {
         final hash = _webSafeHash(input);
         expect(hash, isA<int>());
@@ -104,22 +104,22 @@ void main() {
     test('generates reasonable distribution', () {
       final hashes = <int>{};
       final inputs = List.generate(1000, (i) => 'Collection$i');
-      
+
       for (final input in inputs) {
         final hash = _webSafeHash(input);
         hashes.add(hash);
       }
-      
+
       // Should have good distribution (low collision rate)
       // With 1000 inputs, we expect close to 1000 unique hashes
-      expect(hashes.length, greaterThan(990), 
-             reason: 'Hash function has too many collisions');
+      expect(hashes.length, greaterThan(990),
+          reason: 'Hash function has too many collisions');
     });
 
     test('is deterministic across multiple runs', () {
       const input = 'DeterministicTest';
       final expectedHash = _webSafeHash(input);
-      
+
       // Run multiple times to ensure consistency
       for (var i = 0; i < 100; i++) {
         expect(_webSafeHash(input), equals(expectedHash));

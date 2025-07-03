@@ -13,7 +13,10 @@ void main() {
       test(file.path, () async {
         final content = await file.readAsLines();
 
-        final errorMessage = content.first.split('//').last.trim();
+        final errorMessage = content.first
+            .split('//')
+            .last
+            .trim();
 
         var error = '';
         try {

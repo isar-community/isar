@@ -25,16 +25,16 @@ class User {
       );
 
       final generatedCode = result['a|lib/user.g.dart']!;
-      
+
       // Verify no large integer literals
       expect(generatedCode, isNot(contains(RegExp(r'\b\d{10,}\b'))));
-      
+
       // Verify web-safe hash function is present
       expect(generatedCode, contains('_webSafeHash'));
-      
+
       // Verify function-based ID generation
       expect(generatedCode, contains('idGenerator: () =>'));
-      
+
       // Verify final instead of const
       expect(generatedCode, contains('final UserSchema'));
       expect(generatedCode, isNot(contains('const UserSchema')));
@@ -65,11 +65,11 @@ class Product {
         );
         results.add(result['a|lib/product.g.dart']!);
       }
-      
+
       // All generations should produce identical code
       expect(results[0], equals(results[1]));
       expect(results[1], equals(results[2]));
-      
+
       // Verify the generated code contains expected patterns
       final code = results[0];
       expect(code, contains('idGenerator: () => _webSafeHash(r\'Product\')'));
@@ -129,27 +129,37 @@ class Employee {
 
       final companyCode = result['a|lib/company.g.dart']!;
       final employeeCode = result['a|lib/employee.g.dart']!;
-      
+
       // Verify no large integer literals in any generated code
       expect(companyCode, isNot(contains(RegExp(r'\b\d{10,}\b'))));
       expect(employeeCode, isNot(contains(RegExp(r'\b\d{10,}\b'))));
-      
+
       // Verify all schemas use idGenerator
-      expect(companyCode, contains('idGenerator: () => _webSafeHash(r\'Company\')'));
-      expect(companyCode, contains('idGenerator: () => _webSafeHash(r\'Address\')'));
-      expect(employeeCode, contains('idGenerator: () => _webSafeHash(r\'Employee\')'));
-      
+      expect(companyCode,
+          contains('idGenerator: () => _webSafeHash(r\'Company\')'));
+      expect(companyCode,
+          contains('idGenerator: () => _webSafeHash(r\'Address\')'));
+      expect(employeeCode,
+          contains('idGenerator: () => _webSafeHash(r\'Employee\')'));
+
       // Verify indexes use idGenerator
-      expect(companyCode, contains('idGenerator: () => _webSafeHash(r\'name\')'));
-      expect(employeeCode, contains('idGenerator: () => _webSafeHash(r\'firstName\')'));
-      expect(employeeCode, contains('idGenerator: () => _webSafeHash(r\'lastName\')'));
-      expect(employeeCode, contains('idGenerator: () => _webSafeHash(r\'department_lastName\')'));
-      
+      expect(
+          companyCode, contains('idGenerator: () => _webSafeHash(r\'name\')'));
+      expect(employeeCode,
+          contains('idGenerator: () => _webSafeHash(r\'firstName\')'));
+      expect(employeeCode,
+          contains('idGenerator: () => _webSafeHash(r\'lastName\')'));
+      expect(employeeCode, contains(
+          'idGenerator: () => _webSafeHash(r\'department_lastName\')'));
+
       // Verify links use idGenerator
-      expect(companyCode, contains('idGenerator: () => _webSafeHash(r\'employees\''));
-      expect(employeeCode, contains('idGenerator: () => _webSafeHash(r\'company\''));
-      expect(employeeCode, contains('idGenerator: () => _webSafeHash(r\'manager\''));
-      
+      expect(companyCode,
+          contains('idGenerator: () => _webSafeHash(r\'employees\''));
+      expect(employeeCode,
+          contains('idGenerator: () => _webSafeHash(r\'company\''));
+      expect(employeeCode,
+          contains('idGenerator: () => _webSafeHash(r\'manager\''));
+
       // Verify all schemas are final, not const
       expect(companyCode, contains('final CompanySchema'));
       expect(companyCode, contains('final AddressSchema'));
@@ -196,26 +206,25 @@ class Tag {
 
       final testModelCode = result['a|lib/test_model.g.dart']!;
       final tagCode = result['a|lib/tag.g.dart']!;
-      
+
       // Write generated code to temporary files for analysis
       final tempDir = Directory.systemTemp.createTempSync('isar_test_');
       try {
         final testModelFile = File('${tempDir.path}/test_model.g.dart');
         final tagFile = File('${tempDir.path}/tag.g.dart');
-        
+
         await testModelFile.writeAsString(testModelCode);
         await tagFile.writeAsString(tagCode);
-        
+
         // The files should be valid Dart syntax (this is a basic check)
         expect(testModelCode, contains('extension'));
         expect(testModelCode, contains('final TestModelSchema'));
         expect(tagCode, contains('extension'));
         expect(tagCode, contains('final TagSchema'));
-        
+
         // Verify the generated code follows expected patterns
         expect(testModelCode, contains('_webSafeHash'));
         expect(tagCode, contains('_webSafeHash'));
-        
       } finally {
         tempDir.deleteSync(recursive: true);
       }
@@ -239,21 +248,25 @@ class LegacyModel {
       );
 
       final generatedCode = result['a|lib/legacy_model.g.dart']!;
-      
+
       // Should still generate extension for collection access
-      expect(generatedCode, contains('extension GetLegacyModelCollection on Isar'));
-      expect(generatedCode, contains('IsarCollection<LegacyModel> get legacyModels'));
-      
+      expect(generatedCode,
+          contains('extension GetLegacyModelCollection on Isar'));
+      expect(generatedCode,
+          contains('IsarCollection<LegacyModel> get legacyModels'));
+
       // Should still generate schema with expected structure
-      expect(generatedCode, contains('final LegacyModelSchema = CollectionSchema('));
+      expect(generatedCode,
+          contains('final LegacyModelSchema = CollectionSchema('));
       expect(generatedCode, contains('name: r\'LegacyModel\''));
       expect(generatedCode, contains('properties: {'));
       expect(generatedCode, contains('estimateSize:'));
       expect(generatedCode, contains('serialize:'));
       expect(generatedCode, contains('deserialize:'));
-      
+
       // But should use new idGenerator approach
-      expect(generatedCode, contains('idGenerator: () => _webSafeHash(r\'LegacyModel\')'));
+      expect(generatedCode,
+          contains('idGenerator: () => _webSafeHash(r\'LegacyModel\')'));
     });
   });
 }

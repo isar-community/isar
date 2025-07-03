@@ -11,13 +11,14 @@ void main() {
         accessor: 'testCollections',
         properties: [],
       );
-      
+
       final idGenerator = objectInfo.idGenerator;
       expect(idGenerator, isA<String>());
       expect(idGenerator, contains('_webSafeHash'));
       expect(idGenerator, contains('TestCollection'));
       expect(idGenerator, startsWith('() =>'));
-      expect(idGenerator, matches(r"^\(\) => _webSafeHash\(r'TestCollection'\)$"));
+      expect(
+          idGenerator, matches(r"^\(\) => _webSafeHash\(r'TestCollection'\)$"));
     });
 
     test('idGenerator handles special characters in names', () {
@@ -27,10 +28,11 @@ void main() {
         accessor: 'testCollections',
         properties: [],
       );
-      
+
       final idGenerator = objectInfo.idGenerator;
       expect(idGenerator, contains('Test-Collection'));
-      expect(idGenerator, matches(r"^\(\) => _webSafeHash\(r'Test-Collection'\)$"));
+      expect(idGenerator,
+          matches(r"^\(\) => _webSafeHash\(r'Test-Collection'\)$"));
     });
   });
 
@@ -42,7 +44,7 @@ void main() {
         unique: false,
         replace: false,
       );
-      
+
       final idGenerator = index.idGenerator;
       expect(idGenerator, isA<String>());
       expect(idGenerator, contains('_webSafeHash'));
@@ -59,7 +61,7 @@ void main() {
         'IndexWithCamelCase',
         'index123',
       ];
-      
+
       for (final indexName in testCases) {
         final index = ObjectIndex(
           name: indexName,
@@ -67,10 +69,12 @@ void main() {
           unique: false,
           replace: false,
         );
-        
+
         final idGenerator = index.idGenerator;
         expect(idGenerator, contains(indexName));
-        expect(idGenerator, matches(RegExp(r"^\(\) => _webSafeHash\(r'" + RegExp.escape(indexName) + r"'\)$")));
+        expect(idGenerator, matches(RegExp(
+            r"^\(\) => _webSafeHash\(r'" + RegExp.escape(indexName) +
+                r"'\)$")));
       }
     });
   });
@@ -85,10 +89,10 @@ void main() {
         targetCollectionIsarName: 'TargetCollection',
         isSingle: true,
       );
-      
+
       final objectIsarName = 'SourceCollection';
       final idGenerator = link.idGenerator(objectIsarName);
-      
+
       expect(idGenerator, isA<String>());
       expect(idGenerator, contains('_webSafeHash'));
       expect(idGenerator, contains('testLink'));
@@ -105,10 +109,10 @@ void main() {
         targetCollectionIsarName: 'TargetCollection',
         isSingle: false,
       );
-      
+
       final objectIsarName = 'SourceCollection';
       final idGenerator = link.idGenerator(objectIsarName);
-      
+
       expect(idGenerator, isA<String>());
       expect(idGenerator, contains('_webSafeHash'));
       expect(idGenerator, contains('originalLink'));
@@ -137,7 +141,7 @@ void main() {
           'isBacklink': false,
         },
       ];
-      
+
       for (final testCase in testCases) {
         final link = ObjectLink(
           dartName: testCase['isarName'] as String,
@@ -147,14 +151,15 @@ void main() {
           targetCollectionIsarName: testCase['targetCollection'] as String,
           isSingle: true,
         );
-        
+
         final idGenerator = link.idGenerator('SourceCollection');
         expect(idGenerator, isA<String>());
         expect(idGenerator, startsWith('() =>'));
         expect(idGenerator, contains('_webSafeHash'));
-        
+
         if (testCase['isBacklink'] as bool) {
-          expect(idGenerator, contains(testCase['targetLinkIsarName'] as String));
+          expect(
+              idGenerator, contains(testCase['targetLinkIsarName'] as String));
           expect(idGenerator, contains('1')); // backlink seed
         } else {
           expect(idGenerator, contains(testCase['isarName'] as String));
@@ -172,7 +177,7 @@ void main() {
         targetCollectionIsarName: 'Target',
         isSingle: true,
       );
-      
+
       final backLink = ObjectLink(
         dartName: 'backLink',
         isarName: 'backLink',
@@ -181,7 +186,7 @@ void main() {
         targetCollectionIsarName: 'Target',
         isSingle: false,
       );
-      
+
       expect(regularLink.isBacklink, isFalse);
       expect(backLink.isBacklink, isTrue);
     });
