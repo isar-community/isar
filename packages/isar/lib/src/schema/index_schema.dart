@@ -4,7 +4,7 @@ part of isar;
 class IndexSchema {
   /// @nodoc
   @protected
-  const IndexSchema({
+  IndexSchema({
     int? id,
     this.idGenerator,
     required this.name,

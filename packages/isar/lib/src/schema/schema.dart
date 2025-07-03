@@ -4,7 +4,7 @@ part of isar;
 class Schema<OBJ> {
   /// @nodoc
   @protected
-  const Schema({
+  Schema({
     int? id,
     this.idGenerator,
     required this.name,

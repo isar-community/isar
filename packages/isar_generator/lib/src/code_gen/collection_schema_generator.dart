@@ -5,7 +5,7 @@ import 'package:isar_generator/src/isar_type.dart';
 import 'package:isar_generator/src/object_info.dart';
 
 String generateSchema(ObjectInfo object) {
-  var code = 'const ${object.dartName.capitalize()}Schema = ';
+  var code = 'final ${object.dartName.capitalize()}Schema = ';
   if (!object.isEmbedded) {
     code += 'CollectionSchema(';
   } else {

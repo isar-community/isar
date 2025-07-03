@@ -4,7 +4,7 @@ part of isar;
 class LinkSchema {
   /// @nodoc
   @protected
-  const LinkSchema({
+  LinkSchema({
     int? id,
     this.idGenerator,
     required this.name,
