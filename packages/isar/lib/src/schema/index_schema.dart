@@ -5,12 +5,14 @@ class IndexSchema {
   /// @nodoc
   @protected
   const IndexSchema({
-    required this.id,
+    int? id,
+    this.idGenerator,
     required this.name,
     required this.unique,
     required this.replace,
     required this.properties,
-  });
+  }) : _id = id,
+       assert(id != null || idGenerator != null, 'Either id or idGenerator must be provided');
 
   /// @nodoc
   @protected
@@ -27,7 +29,13 @@ class IndexSchema {
   }
 
   /// Internal id of this index.
-  final int id;
+  final int? _id;
+
+  /// Function to generate the internal id of this index.
+  final int Function()? idGenerator;
+
+  /// Internal id of this index.
+  int get id => _id ?? idGenerator!();
 
   /// Name of this index.
   final String name;

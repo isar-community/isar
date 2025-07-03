@@ -5,14 +5,16 @@ class Schema<OBJ> {
   /// @nodoc
   @protected
   const Schema({
-    required this.id,
+    int? id,
+    this.idGenerator,
     required this.name,
     required this.properties,
     required this.estimateSize,
     required this.serialize,
     required this.deserialize,
     required this.deserializeProp,
-  });
+  }) : _id = id,
+       assert(id != null || idGenerator != null, 'Either id or idGenerator must be provided');
 
   /// @nodoc
   @protected
@@ -33,7 +35,13 @@ class Schema<OBJ> {
   }
 
   /// Internal id of this collection or embedded object.
-  final int id;
+  final int? _id;
+
+  /// Function to generate the internal id of this collection or embedded object.
+  final int Function()? idGenerator;
+
+  /// Internal id of this collection or embedded object.
+  int get id => _id ?? idGenerator!();
 
   /// Name of the collection or embedded object
   final String name;
