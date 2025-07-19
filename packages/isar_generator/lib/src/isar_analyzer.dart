@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dartx/dartx.dart';
@@ -9,9 +9,9 @@ import 'package:isar_generator/src/isar_type.dart';
 import 'package:isar_generator/src/object_info.dart';
 
 class IsarAnalyzer {
-  ObjectInfo analyzeCollection(Element element) {
+  ObjectInfo analyzeCollection(Element2 element) {
     final constructor = _checkValidClass(element);
-    final modelClass = element as ClassElement;
+    final modelClass = element as ClassElement2;
 
     final properties = <ObjectProperty>[];
     final links = <ObjectLink>[];
@@ -58,11 +58,11 @@ class IsarAnalyzer {
     );
   }
 
-  ObjectInfo analyzeEmbedded(Element element) {
+  ObjectInfo analyzeEmbedded(Element2 element) {
     final constructor = _checkValidClass(element);
-    final modelClass = element as ClassElement;
+    final modelClass = element as ClassElement2;
 
-    if (constructor.parameters.any((e) => e.isRequired)) {
+    if (constructor.formalParameters.any((e) => e.isRequired)) {
       err(
         'Constructors of embedded objects must not have required parameters.',
         constructor,
@@ -99,10 +99,10 @@ class IsarAnalyzer {
     );
   }
 
-  ConstructorElement _checkValidClass(Element modelClass) {
-    if (modelClass is! ClassElement ||
-        modelClass is EnumElement ||
-        modelClass is MixinElement) {
+  ConstructorElement2 _checkValidClass(Element2 modelClass) {
+    if (modelClass is! ClassElement2 ||
+        modelClass is EnumElement2 ||
+        modelClass is MixinElement2) {
       err(
         'Only classes may be annotated with @Collection or @Embedded.',
         modelClass,
@@ -117,15 +117,15 @@ class IsarAnalyzer {
       err('Class must be public.', modelClass);
     }
 
-    final constructor = modelClass.constructors
-        .firstOrNullWhere((ConstructorElement c) => c.periodOffset == null);
+    final constructor = modelClass.constructors2
+        .firstOrNullWhere((ConstructorElement2 c) => c.firstFragment.periodOffset == null);
     if (constructor == null) {
       err('Class needs an unnamed constructor.', modelClass);
     }
 
     final hasCollectionSupertype = modelClass.allSupertypes.any((type) {
-      return type.element.collectionAnnotation != null ||
-          type.element.embeddedAnnotation != null;
+      return type.element3.collectionAnnotation != null ||
+          type.element3.embeddedAnnotation != null;
     });
     if (hasCollectionSupertype) {
       err(
@@ -140,18 +140,18 @@ class IsarAnalyzer {
 
   void _checkValidPropertiesConstructor(
     List<ObjectProperty> properties,
-    ConstructorElement constructor,
+    ConstructorElement2 constructor,
   ) {
     if (properties.map((e) => e.isarName).distinct().length !=
         properties.length) {
       err(
         'Two or more properties have the same name.',
-        constructor.enclosingElement3,
+        constructor.enclosingElement2,
       );
     }
 
-    final unknownConstructorParameter = constructor.parameters.firstOrNullWhere(
-      (p) => p.isRequired && properties.none((e) => e.dartName == p.name),
+    final unknownConstructorParameter = constructor.formalParameters.firstOrNullWhere(
+      (p) => p.isRequired && properties.none((e) => e.dartName == p.name3),
     );
     if (unknownConstructorParameter != null) {
       err(
@@ -161,11 +161,11 @@ class IsarAnalyzer {
     }
   }
 
-  Map<String, String> _getEmbeddedDartNames(ClassElement element) {
-    void fillNames(Map<String, String> names, ClassElement element) {
+  Map<String, String> _getEmbeddedDartNames(ClassElement2 element) {
+    void fillNames(Map<String, String> names, ClassElement2 element) {
       for (final property in element.allAccessors) {
-        final type = property.type.scalarType.element;
-        if (type is ClassElement && type.embeddedAnnotation != null) {
+        final type = property.type.scalarType.element3;
+        if (type is ClassElement2 && type.embeddedAnnotation != null) {
           final isarName = type.isarName;
           if (!names.containsKey(isarName)) {
             names[type.isarName] = type.displayName;
@@ -181,8 +181,8 @@ class IsarAnalyzer {
   }
 
   ObjectProperty analyzeObjectProperty(
-    PropertyInducingElement property,
-    ConstructorElement constructor,
+    PropertyInducingElement2 property,
+    ConstructorElement2 constructor,
   ) {
     final dartType = property.type;
     final scalarDartType = dartType.scalarType;
@@ -191,35 +191,35 @@ class IsarAnalyzer {
     String? defaultEnumElement;
 
     late final IsarType isarType;
-    if (scalarDartType.element is EnumElement) {
+    if (scalarDartType.element3 is EnumElement2) {
       final enumeratedAnn = property.enumeratedAnnotation;
       if (enumeratedAnn == null) {
         err('Enum property must be annotated with @enumerated.', property);
       }
 
-      final enumClass = scalarDartType.element! as EnumElement;
+      final enumClass = scalarDartType.element3! as EnumElement2;
       final enumElements =
-          enumClass.fields.where((f) => f.isEnumConstant).toList();
-      defaultEnumElement = '${enumClass.name}.${enumElements.first.name}';
+          enumClass.fields2.where((f) => f.isEnumConstant).toList();
+      defaultEnumElement = '${enumClass.name3}.${enumElements.first.name3}';
 
       if (enumeratedAnn.type == EnumType.ordinal) {
         isarType = dartType.isDartCoreList ? IsarType.byteList : IsarType.byte;
         enumMap = {
-          for (var i = 0; i < enumElements.length; i++) enumElements[i].name: i,
+          for (var i = 0; i < enumElements.length; i++) enumElements[i].name3!: i,
         };
         enumPropertyName = 'index';
       } else if (enumeratedAnn.type == EnumType.ordinal32) {
         isarType = dartType.isDartCoreList ? IsarType.intList : IsarType.int;
 
         enumMap = {
-          for (var i = 0; i < enumElements.length; i++) enumElements[i].name: i,
+          for (var i = 0; i < enumElements.length; i++) enumElements[i].name3!: i,
         };
         enumPropertyName = 'index';
       } else if (enumeratedAnn.type == EnumType.name) {
         isarType =
             dartType.isDartCoreList ? IsarType.stringList : IsarType.string;
         enumMap = {
-          for (final value in enumElements) value.name: value.name,
+          for (final value in enumElements) value.name3! : value.name3,
         };
         enumPropertyName = 'name';
       } else {
@@ -231,10 +231,10 @@ class IsarAnalyzer {
             property,
           );
         }
-        final enumProperty = enumClass.getField(enumPropertyName);
+        final enumProperty = enumClass.getField2(enumPropertyName);
         if (enumProperty == null || enumProperty.isEnumConstant) {
           err('Enum property "$enumProperty" does not exist.', property);
-        } else if (enumProperty.nonSynthetic is PropertyAccessorElement) {
+        } else if (enumProperty is PropertyAccessorElement2) {
           err('Only fields are supported for enum properties', enumProperty);
         }
 
@@ -250,26 +250,26 @@ class IsarAnalyzer {
             dartType.isDartCoreList ? enumIsarType!.listType : enumIsarType!;
         enumMap = {};
         for (final element in enumElements) {
-          final property =
+          final property2 =
               element.computeConstantValue()!.getField(enumPropertyName)!;
-          final propertyValue = property.toBoolValue() ??
-              property.toIntValue() ??
-              property.toDoubleValue() ??
-              property.toStringValue();
+          final propertyValue = property2.toBoolValue() ??
+              property2.toIntValue() ??
+              property2.toDoubleValue() ??
+              property2.toStringValue();
           if (propertyValue == null) {
             err(
               'Null values are not supported for enum properties.',
-              enumProperty,
+              property2.variable2,
             );
           }
 
           if (enumMap.values.contains(propertyValue)) {
             err(
               'Enum property has duplicate values.',
-              enumProperty,
+              property2.variable2,
             );
           }
-          enumMap[element.name] = propertyValue;
+          enumMap[element.name3!] = propertyValue;
         }
       }
     } else {
@@ -293,7 +293,7 @@ class IsarAnalyzer {
     }
 
     final constructorParameter =
-        constructor.parameters.firstOrNullWhere((p) => p.name == property.name);
+        constructor.formalParameters.firstOrNullWhere((p) => p.name3 == property.name3);
     int? constructorPosition;
     late PropertyDeser deserialize;
     if (constructorParameter != null) {
@@ -307,18 +307,18 @@ class IsarAnalyzer {
           ? PropertyDeser.namedParam
           : PropertyDeser.positionalParam;
       constructorPosition =
-          constructor.parameters.indexOf(constructorParameter);
+          constructor.formalParameters.indexOf(constructorParameter);
     } else {
       deserialize =
-          property.setter == null ? PropertyDeser.none : PropertyDeser.assign;
+          property.setter2 == null ? PropertyDeser.none : PropertyDeser.assign;
     }
 
     return ObjectProperty(
       dartName: property.displayName,
       isarName: property.isarName,
-      typeClassName: dartType.scalarType.element!.name!,
+      typeClassName: dartType.scalarType.element3!.name3!,
       targetIsarName: isarType.containsObject
-          ? dartType.scalarType.element!.isarName
+          ? dartType.scalarType.element3!.isarName
           : null,
       isarType: isarType,
       isId: dartType.isIsarId,
@@ -329,12 +329,12 @@ class IsarAnalyzer {
       elementNullable: elementNullable,
       userDefaultValue: constructorParameter?.defaultValueCode,
       deserialize: deserialize,
-      assignable: property.setter != null,
+      assignable: property.setter2 != null,
       constructorPosition: constructorPosition,
     );
   }
 
-  ObjectLink analyzeObjectLink(PropertyInducingElement property) {
+  ObjectLink analyzeObjectLink(PropertyInducingElement2 property) {
     if (property.type.nullabilitySuffix != NullabilitySuffix.none) {
       err('Link properties must not be nullable.', property);
     } else if (property.isLate) {
@@ -347,7 +347,7 @@ class IsarAnalyzer {
       err('Links type must not be nullable.', property);
     }
 
-    final targetCol = linkType.element! as ClassElement;
+    final targetCol = linkType.element3! as ClassElement2;
     if (targetCol.collectionAnnotation == null) {
       err('Link target is not annotated with @collection');
     }
@@ -375,7 +375,7 @@ class IsarAnalyzer {
       dartName: property.displayName,
       isarName: property.isarName,
       targetLinkIsarName: targetLinkIsarName,
-      targetCollectionDartName: linkType.element!.name!,
+      targetCollectionDartName: linkType.element3!.name3!,
       targetCollectionIsarName: targetCol.isarName,
       isSingle: property.isLink,
     );
@@ -383,10 +383,10 @@ class IsarAnalyzer {
 
   Iterable<ObjectIndex> analyzeObjectIndex(
     List<ObjectProperty> properties,
-    PropertyInducingElement element,
+    PropertyInducingElement2 element,
   ) sync* {
     final property =
-        properties.firstOrNullWhere((it) => it.dartName == element.name);
+        properties.firstOrNullWhere((it) => it.dartName == element.name3);
     if (property == null || property.isId) {
       return;
     }
@@ -445,7 +445,7 @@ class IsarAnalyzer {
     }
   }
 
-  void _verifyObjectIndex(ObjectIndex index, Element element) {
+  void _verifyObjectIndex(ObjectIndex index, Element2 element) {
     final properties = index.properties;
 
     if (properties.map((it) => it.property.isarName).distinct().length !=
