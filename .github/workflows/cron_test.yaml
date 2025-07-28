@@ -2,7 +2,7 @@ name: Dart CI Cron
 
 on:
   schedule:
-    - cron: "0 18 * * *"
+    - cron: "0 0 * * 0"
 
 jobs:
   testlab:
