@@ -178,7 +178,7 @@ abstract class Isar {
   void attachCollections(Map<Type, IsarCollection<dynamic>> collections) {
     _collections = collections;
     _collectionsByName = {
-      for (IsarCollection<dynamic> col in collections.values) col.name: col,
+      for (final IsarCollection<dynamic> col in collections.values) col.name: col,
     };
   }
 

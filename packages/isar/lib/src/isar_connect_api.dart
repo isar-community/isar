@@ -128,11 +128,11 @@ class ConnectQuery {
     if (this.sortProperty != null) {
       if (this.sortProperty == collection.schema.idName) {
         whereClause = const IdWhereClause.any();
-        whereSort = sortAsc == true ? Sort.asc : Sort.desc;
+        whereSort = sortAsc ?? false ? Sort.asc : Sort.desc;
       } else {
         sortProperty = SortProperty(
           property: this.sortProperty!,
-          sort: sortAsc == true ? Sort.asc : Sort.desc,
+          sort: sortAsc ?? false ? Sort.asc : Sort.desc,
         );
       }
     }
