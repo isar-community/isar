@@ -141,13 +141,12 @@ jobs:
           flutter test --coverage ../isar_test/test --coverage-path lcov_isar_test.info
         working-directory: packages/isar
       - name: Upload isar Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
-          files: packages/isar/lcov_isar.info
-      - name: Upload isar_test Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          files: packages/isar/lcov_isar_test.info
+          override_branch: v3
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/isar/lcov_isar.info, ./packages/isar/lcov_isar_test.info
+          verbose: true
 
   test_generator:
     name: Generator Test
