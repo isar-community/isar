@@ -4,13 +4,15 @@ part of isar;
 class LinkSchema {
   /// @nodoc
   @protected
-  const LinkSchema({
-    required this.id,
+  LinkSchema({
+    int? id,
+    this.idGenerator,
     required this.name,
     required this.target,
     required this.single,
     this.linkName,
-  });
+  }) : _id = id,
+       assert(id != null || idGenerator != null, 'Either id or idGenerator must be provided');
 
   /// @nodoc
   @protected
@@ -25,7 +27,13 @@ class LinkSchema {
   }
 
   /// Internal id of this link.
-  final int id;
+  final int? _id;
+
+  /// Function to generate the internal id of this link.
+  final int Function()? idGenerator;
+
+  /// Internal id of this link.
+  int get id => _id ?? idGenerator!();
 
   /// Name of this link.
   final String name;

@@ -3,8 +3,21 @@ import 'dart:typed_data';
 
 import 'package:dartx/dartx.dart';
 import 'package:isar/isar.dart';
+import 'isar_type.dart';
 
 import 'package:xxh3/xxh3.dart';
+
+/// Web-safe hash function that generates consistent IDs across platforms
+/// without using large integer literals that break JavaScript compilation
+int _webSafeHash(String input, [int seed = 0]) {
+  // Use a simple but effective hash algorithm that works on all platforms
+  // This is based on the djb2 algorithm but modified to stay within safe integer range
+  var hash = 5381 + seed;
+  for (var i = 0; i < input.length; i++) {
+    hash = ((hash << 5) + hash + input.codeUnitAt(i)) & 0x7FFFFFFF;
+  }
+  return hash;
+}
 
 class ObjectInfo {
   ObjectInfo({
@@ -27,7 +40,7 @@ class ObjectInfo {
   final List<ObjectIndex> indexes;
   final List<ObjectLink> links;
 
-  int get id => xxh3(utf8.encode(isarName) as Uint8List);
+  String get idGenerator => '() => _webSafeHash(r\'$isarName\')';
 
   bool get isEmbedded => accessor == null;
 
@@ -177,7 +190,7 @@ class ObjectIndex {
   final bool unique;
   final bool replace;
 
-  late final id = xxh3(utf8.encode(name) as Uint8List);
+  String get idGenerator => '() => _webSafeHash(r\'$name\')';
 }
 
 class ObjectLink {
@@ -201,11 +214,10 @@ class ObjectLink {
 
   bool get isBacklink => targetLinkIsarName != null;
 
-  int id(String objectIsarName) {
+  String idGenerator(String objectIsarName) {
     final col = isBacklink ? targetCollectionIsarName : objectIsarName;
-    final colId = xxh3(utf8.encode(col) as Uint8List, seed: isBacklink ? 1 : 0);
-
+    final seed = isBacklink ? 1 : 0;
     final name = targetLinkIsarName ?? isarName;
-    return xxh3(utf8.encode(name) as Uint8List, seed: colId);
+    return '() => _webSafeHash(r\'$name\', _webSafeHash(r\'$col\', $seed))';
   }
 }

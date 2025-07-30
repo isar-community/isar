@@ -48,6 +48,18 @@ class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
       // coverage:ignore-file
       // ignore_for_file: ${ignoreLints.join(', ')}
 
+      /// Web-safe hash function that generates consistent IDs across platforms
+      /// without using large integer literals that break JavaScript compilation
+      int _webSafeHash(String input, [int seed = 0]) {
+        // Use a simple but effective hash algorithm that works on all platforms
+        // This is based on the djb2 algorithm but modified to stay within safe integer range
+        var hash = 5381 + seed;
+        for (var i = 0; i < input.length; i++) {
+          hash = ((hash << 5) + hash + input.codeUnitAt(i)) & 0x7FFFFFFF;
+        }
+        return hash;
+      }
+
       extension Get${object.dartName}Collection on Isar {
         IsarCollection<${object.dartName}> get ${object.accessor} => this.collection();
       }
@@ -88,6 +100,18 @@ class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
     return '''
       // coverage:ignore-file
       // ignore_for_file: ${ignoreLints.join(', ')}
+
+      /// Web-safe hash function that generates consistent IDs across platforms
+      /// without using large integer literals that break JavaScript compilation
+      int _webSafeHash(String input, [int seed = 0]) {
+        // Use a simple but effective hash algorithm that works on all platforms
+        // This is based on the djb2 algorithm but modified to stay within safe integer range
+        var hash = 5381 + seed;
+        for (var i = 0; i < input.length; i++) {
+          hash = ((hash << 5) + hash + input.codeUnitAt(i)) & 0x7FFFFFFF;
+        }
+        return hash;
+      }
 
       ${generateSchema(object)}
 
