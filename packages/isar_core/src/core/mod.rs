@@ -11,6 +11,7 @@ pub mod query_builder;
 pub mod reader;
 pub mod schema;
 mod ser;
+pub mod v3schema;
 pub mod value;
 pub mod watcher;
 pub mod writer;
