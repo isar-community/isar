@@ -1,3 +1,14 @@
+> 🚨 Please use the [renamed repository](https://github.com/isar-community/isar-community) (`isar-community/isar-community`) 🚨  
+>
+> This repository is no longer maintained and will not receive any further updates or fixes.  
+> 
+> The new repository will continue active development and is also published on [pub.dev/packages/isar_community](https://pub.dev/packages/isar_community) under the new package name.  
+>
+> We strongly recommend migrating to the new repository for the latest improvements, bug fixes, and community support.
+
+
+
+
 > ⚠️ This repository is a fork of the [original project](https://github.com/isar/isar), focusing primarily on bug fixes and small updates for version 3. Our objective is to enhance the stability and reliability of the codebase while implementing minor improvements to refine the user experience. See details below on how to use this community fork.
 
 <p align="center">
@@ -8,6 +19,8 @@
 </p>
 
 <p align="center">
+  
+  <img src="https://img.shields.io/badge/status-archived-red.svg">
   <a href="https://pub.dev/packages/isar">
     <img src="https://img.shields.io/pub/v/isar?label=pub.dev&labelColor=333940&logo=dart">
   </a>
