@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:build/build.dart';
 import 'package:isar/isar.dart';
 import 'package:isar_generator/src/code_gen/by_index_generator.dart';
@@ -39,7 +39,7 @@ const ignoreLints = [
 class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
   @override
   Future<String> generateForAnnotatedElement(
-    Element element,
+    Element2 element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
@@ -80,7 +80,7 @@ class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
 class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
   @override
   Future<String> generateForAnnotatedElement(
-    Element element,
+    Element2 element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
