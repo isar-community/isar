@@ -4,8 +4,9 @@ part of isar;
 class CollectionSchema<OBJ> extends Schema<OBJ> {
   /// @nodoc
   @protected
-  const CollectionSchema({
-    required super.id,
+  CollectionSchema({
+    super.id,
+    super.idGenerator,
     required super.name,
     required super.properties,
     required super.estimateSize,

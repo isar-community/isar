@@ -1,5 +1,4 @@
 @TestOn('vm')
-
 // ignore_for_file: constant_identifier_names
 
 import 'dart:convert';
@@ -15,7 +14,7 @@ import 'package:test/test.dart';
 void main() {
   group('Golden Binary', () {
     late final json =
-        File('../isar_core/tests/binary_golden.json').readAsStringSync();
+    File('../isar_core/tests/binary_golden.json').readAsStringSync();
     late final tests = (jsonDecode(json) as List<dynamic>)
         .map((e) => BinaryTest.fromJson(e as Map<String, dynamic>))
         .toList();
@@ -102,12 +101,11 @@ class BinaryTest {
   final List<int> bytes;
 }
 
-void _expectIgnoreNull(
-  dynamic left,
-  dynamic right,
-  Type type, {
-  bool inList = false,
-}) {
+void _expectIgnoreNull(dynamic left,
+    dynamic right,
+    Type type, {
+      bool inList = false,
+    }) {
   if (right == null && (type.index < Type.BoolList.index || inList)) {
     if (left is double) {
       expect(left, isNaN);
