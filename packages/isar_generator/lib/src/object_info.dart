@@ -177,7 +177,17 @@ class ObjectIndex {
   final bool unique;
   final bool replace;
 
-  late final id = xxh3(utf8.encode(name) as Uint8List);
+  late final id = _generateSafeId(name);
+
+  int _generateSafeId(String name) {
+    final hash = xxh3(utf8.encode(name) as Uint8List);
+    if (identical(0, 0.0)) {
+      final safeMaxInt = BigInt.parse('9007199254740991');
+      final safeId = BigInt.from(hash).abs() % safeMaxInt;
+      return safeId.toInt();
+    }
+    return hash;
+  }
 }
 
 class ObjectLink {
