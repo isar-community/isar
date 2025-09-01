@@ -19,6 +19,7 @@ dependencies:
   js: any
   meta: ^1.7.0
 
+
 dev_dependencies:
   ffigen: "^7.0.0"
   test: ^1.21.1

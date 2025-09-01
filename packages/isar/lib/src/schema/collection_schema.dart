@@ -5,7 +5,7 @@ class CollectionSchema<OBJ> extends Schema<OBJ> {
   /// @nodoc
   @protected
   const CollectionSchema({
-    required super.id,
+    required super.idGenerator,
     required super.name,
     required super.properties,
     required super.estimateSize,
@@ -31,7 +31,7 @@ class CollectionSchema<OBJ> extends Schema<OBJ> {
   factory CollectionSchema.fromJson(Map<String, dynamic> json) {
     final collection = Schema<dynamic>.fromJson(json);
     return CollectionSchema(
-      id: collection.id,
+      idGenerator: collection.idGenerator,
       name: collection.name,
       properties: collection.properties,
       idName: json['idName'] as String,

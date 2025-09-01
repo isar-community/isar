@@ -5,7 +5,7 @@ class LinkSchema {
   /// @nodoc
   @protected
   const LinkSchema({
-    required this.id,
+    required this.idGenerator,
     required this.name,
     required this.target,
     required this.single,
@@ -16,7 +16,7 @@ class LinkSchema {
   @protected
   factory LinkSchema.fromJson(Map<String, dynamic> json) {
     return LinkSchema(
-      id: -1,
+      idGenerator: () => -1,
       name: json['name'] as String,
       target: json['target'] as String,
       single: json['single'] as bool,
@@ -25,7 +25,9 @@ class LinkSchema {
   }
 
   /// Internal id of this link.
-  final int id;
+  int get id => idGenerator();
+
+  final int Function() idGenerator;
 
   /// Name of this link.
   final String name;
